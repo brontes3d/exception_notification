@@ -1,5 +1,6 @@
-require 'test/unit'
 require 'rubygems'
+require 'test/unit/notification'
+require 'test/unit'
 require 'active_support'
 
 require 'active_record'

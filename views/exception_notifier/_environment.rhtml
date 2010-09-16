@@ -1,7 +1,14 @@
 <% max = @request.env.keys.max { |a,b| a.length <=> b.length } -%>
 <% @request.env.keys.sort.each do |key| -%>
-* <%= "%-*s: %s" % [max.length, key, filter_sensitive_post_data_from_env(key, @request.env[key].to_s.strip)] %>
+<%- 
+  if @request.env[key].is_a?(Hash) or @request.env[key].is_a?(Array)
+    email_display_value = @request.env[key].inspect
+  else
+    email_display_value = @request.env[key].to_s.strip
+  end
+-%>
+* <%= "%-*s: %s" % [max.length, key, filter_sensitive_post_data_from_env(key, email_display_value)] %>
 <% end -%>
 
 * Process: <%= $$ %>
-* Server : <%= `hostname -s`.chomp %>
+* Server : <%= require 'socket'; Socket.gethostname %>

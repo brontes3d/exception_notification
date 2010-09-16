@@ -1,14 +1,28 @@
 require 'ipaddr'
 
 module ExceptionNotifiable
-  # exceptions of these types will not generate notification emails
-  SILENT_EXCEPTIONS = [
-    ActiveRecord::RecordNotFound,
-    ActionController::UnknownController,
-    ActionController::UnknownAction,
-    ActionController::RoutingError,
-    ActionController::MethodNotAllowed
-  ] unless defined?(SILENT_EXCEPTIONS)
+  
+  class << self
+    def const_get(sym)
+      constants[sym]
+    end
+
+    def const_set(sym, obj)
+      constants[sym] = obj
+    end
+
+    def constants
+      @constants ||= {
+        :SILENT_EXCEPTIONS => [
+          ActiveRecord::RecordNotFound,
+          ActionController::UnknownController,
+          ActionController::UnknownAction,
+          ActionController::RoutingError,
+          ActionController::MethodNotAllowed
+        ]
+      }
+    end
+  end  
 
   def self.included(base)
     base.extend ClassMethods
